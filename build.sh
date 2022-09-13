@@ -8,6 +8,8 @@ fi
 
 echo "NDK path: ${NDK}"
 
+ROOT_PATH=`pwd`
+
 OUTPUT_DIR="_output_"
 
 rm -rf ${OUTPUT_DIR}
@@ -50,10 +52,6 @@ function build {
 
     export CC=$TOOLCHAIN/bin/${TRIPLE}${API}-clang
     export CFLAGS="-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -DNDEBUG  -fPIC --gcc-toolchain=$TOOLCHAIN --target=${TRIPLE}${API}"
-    # export NM=$TOOLCHAIN/bin/${CROSS_PREFIX}nm
-    # export AR=$TOOLCHAIN/bin/${CROSS_PREFIX}ar
-    # export AS=$TOOLCHAIN/bin/${CROSS_PREFIX}as
-    # export LD=$TOOLCHAIN/bin/${CROSS_PREFIX}ld
 
     ../configure \
         --prefix=$PREFIX \
@@ -72,6 +70,10 @@ function build {
         --extra-ldflags="-L${X264_ANDROID_DIR}/${ABI}/lib"
 
     make clean && make -j2 && make install
+
+    cd $PREFIX
+    `$ROOT_PATH/ffmpeg-config-gen.sh`
+    cd $OUTPUT_PATH
 }
 
 build armeabi-v7a
