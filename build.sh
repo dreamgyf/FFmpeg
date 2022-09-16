@@ -10,8 +10,8 @@ ROOT_PATH=`pwd`
 
 OUTPUT_DIR="_output_"
 
-rm -rf ${OUTPUT_DIR}
-mkdir ${OUTPUT_DIR} && cd ${OUTPUT_DIR}
+mkdir ${OUTPUT_DIR}
+cd ${OUTPUT_DIR}
 
 OUTPUT_PATH=`pwd`
 
@@ -93,5 +93,9 @@ function build {
     cd $OUTPUT_PATH
 }
 
-build armeabi-v7a
-build arm64-v8a
+echo "Select arch:"
+select arch in "armeabi-v7a" "arm64-v8a" "x86" "x86-64"
+do
+    build $arch
+    break
+done

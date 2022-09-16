@@ -8,13 +8,14 @@ echo "" >> ffmpeg-config.cmake
 
 echo "set(FFMPEG_LIBRARIES" >> ffmpeg-config.cmake
 
+test_libs=(libavformat libavdevice libavcodec libavutil libswscale libswresample libavfilter libpostproc)
 libs=()
 
-for file in ./lib/*
+for test_lib in ${test_libs[@]}
 do
-    if [[ ${file##*.} == "a" ]]; then
-        libs[${#libs[@]}]=${file##*/}
-        echo "    \${FFMPEG_LIBDIR}/${file##*/}" >> ffmpeg-config.cmake
+    if [[ -f "./lib/${test_lib}.a" ]]; then
+        libs[${#libs[@]}]=$test_lib
+        echo "    \${FFMPEG_LIBDIR}/${test_lib}.a" >> ffmpeg-config.cmake
     fi
 done
 
@@ -25,7 +26,7 @@ echo "" >> ffmpeg-config.cmake
 
 for lib in ${libs[@]}
 do
-    echo "set(FFMPEG_${lib%%.*}_FOUND TRUE)" >> ffmpeg-config.cmake
+    echo "set(FFMPEG_${lib}_FOUND TRUE)" >> ffmpeg-config.cmake
 done
 
 echo "" >> ffmpeg-config.cmake
